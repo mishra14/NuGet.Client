@@ -298,8 +298,8 @@ namespace NuGet.Packaging
 
 #if IS_DESKTOP
             using (var reader = new BinaryReader(ZipReadStream, SigningSpecifications.Encoding, leaveOpen: true))
+            using (var hashAlgorithm = signatureContent.HashAlgorithm.GetHashProvider())
             {
-                var hashAlgorithm = signatureContent.HashAlgorithm.GetHashProvider();
                 var expectedHash = Convert.FromBase64String(signatureContent.HashValue);
                 if (!SignedPackageArchiveUtility.VerifySignedPackageIntegrity(reader, hashAlgorithm, expectedHash))
                 {
@@ -309,7 +309,7 @@ namespace NuGet.Packaging
 #endif
         }
 
-        public override Task<byte[]> GetArchiveHashAsync(HashAlgorithmName hashAlgorithm, CancellationToken token)
+        public override Task<byte[]> GetArchiveHashAsync(HashAlgorithmName hashAlgorithmName, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -319,9 +319,13 @@ namespace NuGet.Packaging
             }
 
             ZipReadStream.Seek(offset: 0, origin: SeekOrigin.Begin);
-            var hash = hashAlgorithm.GetHashProvider().ComputeHash(ZipReadStream, leaveStreamOpen: true);
 
-            return Task.FromResult(hash);
+            using (var hashAlgorithm = hashAlgorithmName.GetHashProvider())
+            {
+                var hash = hashAlgorithm.ComputeHash(ZipReadStream, leaveStreamOpen: true);
+
+                return Task.FromResult(hash);
+            }
         }
     }
 }
