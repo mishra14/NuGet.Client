@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.legacy.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.ngen.props" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.common.props')" />
   <Import Project="$(VSSDKRoot)\build\Microsoft.VSSDK.BuildTools.props" Condition="'$(IsXplat)' != 'true' AND '$(IsBuildOnlyXPLATProjects)' != 'true' "/> <!-- No bootstrapping on XPLAT, this project is not expect to work correctly-->
   <PropertyGroup>
@@ -24,18 +25,6 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>14.0</OldToolsVersion>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SkipAssemblyAttributes)' != 'true'">
-    <AssemblyAttributes Include="Microsoft.VisualStudio.Shell.ProvideCodeBase">
-      <AssemblyName>$(AssemblyName)</AssemblyName>
-      <Version>$(SemanticVersion).$(PreReleaseVersion)</Version>
-      <CodeBase>$PackageFolder$\\$(AssemblyName).dll</CodeBase>
-    </AssemblyAttributes>
-    <AssemblyAttributes Include="Microsoft.VisualStudio.Shell.ProvideCodeBase">
-      <AssemblyName>NuGet.PackageManagement.VisualStudio</AssemblyName>
-      <Version>$(SemanticVersion).$(PreReleaseVersion)</Version>
-      <CodeBase>$PackageFolder$\\NuGet.PackageManagement.VisualStudio.dll</CodeBase>
-    </AssemblyAttributes>
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
