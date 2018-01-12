@@ -96,5 +96,15 @@
       <Version>$(SemanticVersion).$(NetCoreAssemblyBuildNumber)</Version>
       <CodeBase>$PackageFolder$\\NuGet.Versioning.dll</CodeBase>
     </AssemblyAttributes>
+    <AssemblyAttributes Include="Microsoft.VisualStudio.Shell.ProvideCodeBase">
+      <AssemblyName>NuGet.Indexing</AssemblyName>
+      <Version>$(SemanticVersion).$(NetCoreAssemblyBuildNumber)</Version>
+      <CodeBase>$PackageFolder$\\NuGet.Indexing.dll</CodeBase>
+    </AssemblyAttributes>
+    <AssemblyAttributes Include="Microsoft.VisualStudio.Shell.ProvideCodeBase">
+      <AssemblyName>NuGet.DependencyResolver.Core</AssemblyName>
+      <Version>$(SemanticVersion).$(NetCoreAssemblyBuildNumber)</Version>
+      <CodeBase>$PackageFolder$\\NuGet.DependencyResolver.Core.dll</CodeBase>
+    </AssemblyAttributes>
   </ItemGroup>
 </Project>
