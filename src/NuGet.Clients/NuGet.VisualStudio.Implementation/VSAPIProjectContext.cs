@@ -20,7 +20,7 @@ namespace NuGet.VisualStudio
         public VSAPIProjectContext(bool skipAssemblyReferences, bool bindingRedirectsDisabled)
         {
             var signedPackageVerifier = new PackageSignatureVerifier(
-                            SignatureVerificationProviderFactory.GetSignatureVerificationProviders(),
+                            SignatureVerificationProviderFactory.GetSignatureVerificationProviders(new SignatureVerificationProviderArgs()),
                             SignedPackageVerifierSettings.Default);
 
             PackageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv2, PackageExtractionBehavior.XmlDocFileSaveMode, new LoggerAdapter(this), signedPackageVerifier);

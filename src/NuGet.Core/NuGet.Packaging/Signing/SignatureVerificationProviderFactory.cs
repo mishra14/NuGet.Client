@@ -7,12 +7,13 @@ namespace NuGet.Packaging.Signing
 {
     public static class SignatureVerificationProviderFactory
     {
-        public static IEnumerable<ISignatureVerificationProvider> GetSignatureVerificationProviders()
+        public static IEnumerable<ISignatureVerificationProvider> GetSignatureVerificationProviders(SignatureVerificationProviderArgs args)
         {
             return new List<ISignatureVerificationProvider>()
             {
                 new IntegrityVerificationProvider(),
                 new SignatureTrustAndValidityVerificationProvider(),
+                new WhitelistVerificationProvider(args.Whitelist)
             };
         }
     }

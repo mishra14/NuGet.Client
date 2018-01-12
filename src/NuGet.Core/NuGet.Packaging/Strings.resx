@@ -482,4 +482,7 @@ Valid from:</comment>
   <data name="CommitmentTypeIndicationAttributeInvalid" xml:space="preserve">
     <value>The attribute is not a valid commitment-type-indication attribute.</value>
   </data>
+  <data name="Error_NoMatchingCertificate" xml:space="preserve">
+    <value>No certificate matching the provided fingerprints was found in the signature.</value>
+  </data>
 </root>

@@ -21,6 +21,7 @@ namespace NuGet.CommandLine.FuncTest.Commands
         private readonly string _noTimestamperWarningCode = NuGetLogCode.NU3027.ToString();
         private readonly string _primarySignatureInvalidErrorCode = NuGetLogCode.NU3018.ToString();
         private readonly string _signingDefaultErrorCode = NuGetLogCode.NU3000.ToString();
+        private readonly string _noMatchingCertErrorCode = NuGetLogCode.NU3003.ToString();
 
         private SignCommandTestFixture _testFixture;
         private TrustedTestCert<TestCertificate> _trustedTestCert;
@@ -189,6 +190,85 @@ namespace NuGet.CommandLine.FuncTest.Commands
                 // Assert
                 verifyResult.Success.Should().BeTrue();
                 verifyResult.AllOutput.Should().Contain(_noTimestamperWarningCode);
+            }
+        }
+
+        [CIOnlyFact]
+        public void VerifyCommand_VerifyOnPackageSignedWithWhitelistedCertificateSucceeds()
+        {
+            // Arrange
+            var cert = _testFixture.TrustedTestCertificateChain.Leaf;
+
+            using (var dir = TestDirectory.Create())
+            using (var zipStream = new SimpleTestPackageContext().CreateAsStream())
+            {
+                var packagePath = Path.Combine(dir, Guid.NewGuid().ToString());
+
+                zipStream.Seek(offset: 0, loc: SeekOrigin.Begin);
+
+                using (var fileStream = File.OpenWrite(packagePath))
+                {
+                    zipStream.CopyTo(fileStream);
+                }
+
+                var signResult = CommandRunner.Run(
+                    _nugetExePath,
+                    dir,
+                    $"sign {packagePath} -CertificateFingerprint {cert.Source.Cert.Thumbprint} -CertificateStoreName {cert.StoreName} -CertificateStoreLocation {cert.StoreLocation}",
+                    waitForExit: true);
+
+                signResult.Success.Should().BeTrue();
+
+                // Act
+                var verifyResult = CommandRunner.Run(
+                    _nugetExePath,
+                    dir,
+                    $"verify {packagePath} -Signatures -CertificateFingerprint {cert.Source.Cert.Thumbprint};abc;def",
+                    waitForExit: true);
+
+                // Assert
+                verifyResult.Success.Should().BeTrue();
+                verifyResult.AllOutput.Should().Contain(_noTimestamperWarningCode);
+            }
+        }
+
+        [CIOnlyFact]
+        public void VerifyCommand_VerifyOnPackageSignedWithoutWhitelistedCertificateSucceeds()
+        {
+            // Arrange
+            var cert = _testFixture.TrustedTestCertificateChain.Leaf;
+
+            using (var dir = TestDirectory.Create())
+            using (var zipStream = new SimpleTestPackageContext().CreateAsStream())
+            {
+                var packagePath = Path.Combine(dir, Guid.NewGuid().ToString());
+
+                zipStream.Seek(offset: 0, loc: SeekOrigin.Begin);
+
+                using (var fileStream = File.OpenWrite(packagePath))
+                {
+                    zipStream.CopyTo(fileStream);
+                }
+
+                var signResult = CommandRunner.Run(
+                    _nugetExePath,
+                    dir,
+                    $"sign {packagePath} -CertificateFingerprint {cert.Source.Cert.Thumbprint} -CertificateStoreName {cert.StoreName} -CertificateStoreLocation {cert.StoreLocation}",
+                    waitForExit: true);
+
+                signResult.Success.Should().BeTrue();
+
+                // Act
+                var verifyResult = CommandRunner.Run(
+                    _nugetExePath,
+                    dir,
+                    $"verify {packagePath} -Signatures -CertificateFingerprint abc;def",
+                    waitForExit: true);
+
+                // Assert
+                verifyResult.Success.Should().BeFalse();
+                verifyResult.AllOutput.Should().Contain(_noTimestamperWarningCode);
+                verifyResult.AllOutput.Should().Contain(_noMatchingCertErrorCode);
             }
         }
     }

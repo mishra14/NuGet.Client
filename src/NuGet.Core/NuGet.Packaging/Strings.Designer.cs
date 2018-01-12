@@ -161,6 +161,15 @@ namespace NuGet.Packaging {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No certificate matching the provided fingerprints was found in the signature..
+        /// </summary>
+        internal static string Error_NoMatchingCertificate {
+            get {
+                return ResourceManager.GetString("Error_NoMatchingCertificate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package signature contains multiple primary signatures..
         /// </summary>
         internal static string Error_NotOnePrimarySignature {
