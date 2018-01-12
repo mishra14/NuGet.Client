@@ -2668,6 +2668,7 @@ namespace NuGet.PackageManagement
                                 dependency => dependency.Name.Equals(originalAction.PackageIdentity.Id, StringComparison.OrdinalIgnoreCase));
 
                             projectAction.InstallationContext.SuppressParent = resolvedAction.SuppressParent;
+                            projectAction.InstallationContext.IncludeType = resolvedAction.IncludeType;
                         }
 
                         // Install the package to the project

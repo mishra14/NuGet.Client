@@ -42,5 +42,7 @@ namespace NuGet.ProjectManagement
         public IDictionary<NuGetFramework, string> OriginalFrameworks { get; }
 
         public LibraryIncludeFlags SuppressParent { get; set; } = LibraryIncludeFlagUtils.DefaultSuppressParent;
+
+        public LibraryIncludeFlags IncludeType { get; set; } = LibraryIncludeFlags.All;
     }
 }

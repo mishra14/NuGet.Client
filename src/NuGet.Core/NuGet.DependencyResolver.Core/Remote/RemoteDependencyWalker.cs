@@ -194,6 +194,10 @@ namespace NuGet.DependencyResolver
                         ddFlag = true;
                         dependency.SuppressParent = LibraryIncludeFlags.All;
                     }
+                    if (dependency.IncludeType == LibraryIncludeFlags.All)
+                    {
+                        dependency.IncludeType = LibraryIncludeFlags.All & ~LibraryIncludeFlags.Runtime;
+                    }
                 }
 
                 if (!ddFlag || outerEdge == null)

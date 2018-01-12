@@ -287,6 +287,13 @@ namespace NuGet.PackageManagement.VisualStudio
                             ProjectItemProperties.PrivateAssets,
                             LibraryIncludeFlagUtils.GetFlagString(installationContext.SuppressParent).Replace(',', ';'));
                     }
+
+                    if (installationContext.IncludeType != LibraryIncludeFlags.All)
+                    {
+                        await reference.Metadata.SetPropertyValueAsync(
+                            ProjectItemProperties.ExcludeAssets,
+                            LibraryIncludeFlagUtils.GetFlagString(installationContext.SuppressParent).Replace(',', ';'));
+                    }
                 }
             }
             else
